@@ -1,0 +1,126 @@
+import re
+import random
+
+class SymptomAnalyzer:
+    def __init__(self):
+        # Initialize symptom combinations with corresponding diseases and specializations
+        self.symptom_combinations = {
+            ('fever'): {'disease': 'Normal Fever', 'specialization': 'General Physician'},
+            ('fever', 'cough'): {'disease': 'Flu', 'specialization': 'General Physician'},
+            ('fever', 'shortness of breath'): {'disease': 'Pneumonia', 'specialization': 'Pulmonologist'},
+            ('headache', 'nausea', 'vomiting'): {'disease': 'Migraine', 'specialization': 'Neurologist'},
+            ('nausea', 'vomiting', 'diarrhea'): {'disease': 'Food poisoning', 'specialization': 'Gastroenterologist'},
+            ('chest pain', 'shortness of breath'): {'disease': 'Heart attack', 'specialization': 'Cardiologist'},
+            # Add more symptom combinations and corresponding diseases and specializations
+        }
+
+    def analyze_symptoms(self, symptoms):
+        # Analyze symptom combinations and return potential diseases, specializations, and medical tests
+        potential_diseases = []
+        specializations = []
+        medical_tests = []
+        for combination, info in self.symptom_combinations.items():
+            if set(combination).issubset(symptoms):
+                potential_diseases.append(info['disease'])
+                specializations.append(info['specialization'])
+                medical_tests.append(self.get_medical_tests(info['disease']))
+        medical_tests = [test for sublist in medical_tests for test in sublist]  # Flatten the list
+        return list(set(potential_diseases)), list(set(specializations)), medical_tests
+
+    def get_medical_tests(self, disease):
+        # Return recommended medical tests based on disease
+        medical_tests_dict = {
+            'Flu': ['Rapid influenza diagnostic test', 'Nasopharyngeal swab'],
+            'Migraine': ['Neurological examination', 'MRI or CT scan'],
+            'Food poisoning': ['Stool culture', 'Blood tests'],
+            'Heart attack': ['Electrocardiogram (ECG)', 'Blood tests', 'Echocardiogram'],
+            'Pneumonia': ['Chest X-ray', 'Sputum culture', 'Blood tests']
+            # Add more medical tests for other diseases
+        }
+        return medical_tests_dict.get(disease, [])
+
+class PrescriptionGenerator:
+    def generate_prescription(self, disease, medical_tests):
+        # Generate prescription based on disease and recommended medical tests
+        prescription = "Prescription for treating " + disease + ":\n"
+        if disease == 'Flu':
+            prescription += "- Rest\n- Plenty of fluids\n- Antiviral medication\n"
+        elif disease == 'Migraine':
+            prescription += "- Pain relievers\n- Rest in a quiet, dark room\n- Avoid triggers\n"
+        elif disease == 'Food poisoning':
+            prescription += "- Plenty of fluids\n- Oral rehydration solution\n- Avoid solid foods for a few hours\n"
+        elif disease == 'Heart attack':
+            prescription += "- Call emergency services immediately\n- Chew aspirin (if available)\n- Keep calm\n"
+        elif disease == 'Pneumonia':
+            prescription += "- Antibiotics\n- Rest\n- Plenty of fluids\n"
+        # Add more prescriptions for other diseases
+        prescription += "\nRecommended medical tests:\n" + "".join(medical_tests)
+        return prescription
+
+
+class Doctor:
+    def __init__(self, name, specialization):
+        self.name = name
+        self.specialization = specialization
+
+
+class AppointmentScheduler:
+    def __init__(self):
+        # Initialize list of doctors with their specializations
+        self.doctors = [
+            Doctor("Dr. Steve", "General Physician"),
+            Doctor("Dr. Smith", "Cardiologist"),
+            Doctor("Dr. Johnson", "Pulmonologist"),
+            Doctor("Dr. Williams", "Gastroenterologist"),
+            Doctor("Dr. Brown", "Neurologist"),
+            # Add more doctors with their specializations
+        ]
+
+    def schedule_appointment(self, patient_name, preferred_date, specializations):
+        # Filter doctors by available specializations
+        available_doctors = [doctor for doctor in self.doctors if doctor.specialization in specializations]
+        if not available_doctors:
+            print("No doctors available for the required specializations.")
+            return
+
+        # Randomly select a doctor from the available ones
+        selected_doctor = random.choice(available_doctors)
+
+        # Schedule appointment for the patient with the selected doctor
+        print("Appointment scheduled for", patient_name, "on", preferred_date, "with Dr.", selected_doctor.name,
+              "(", selected_doctor.specialization, ")")
+
+
+# Main function to interact with the system
+def main():
+    symptom_analyzer = SymptomAnalyzer()
+    prescription_generator = PrescriptionGenerator()
+    appointment_scheduler = AppointmentScheduler()
+
+    # Interactive input for symptoms
+    symptoms_input = input("Please enter your symptoms separated by commas: ")
+    symptoms = re.findall(r'\w+', symptoms_input.lower())
+
+    # Analyze symptoms
+    potential_diseases, specializations, medical_tests = symptom_analyzer.analyze_symptoms(symptoms)
+    if not potential_diseases:
+        print("No potential diseases found based on symptoms provided.")
+        return
+
+    print("Potential diseases based on symptoms:", potential_diseases)
+
+    # Generate prescription for each potential disease
+    for disease, tests in zip(potential_diseases, medical_tests):
+        prescription = prescription_generator.generate_prescription(disease, tests)
+        print("Prescription for", disease + ":", prescription)
+
+    # Interactive input for appointment scheduling
+    patient_name = input("Please enter your name: ")
+    preferred_date = input("Please enter your preferred appointment date (YYYY-MM-DD): ")
+
+    # Schedule appointment for the patient
+    appointment_scheduler.schedule_appointment(patient_name, preferred_date, specializations)
+
+
+if __name__ == "__main__":
+    main()

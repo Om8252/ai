@@ -1,0 +1,39 @@
+import re
+
+def respond_to_query(query,name):
+    if re.search(r"\b(hello|hi|hey)\b", query, re.IGNORECASE):
+        return f"Hello {name}! How can I assist you?"
+    elif re.search(r"\b(who are you)\b", query, re.IGNORECASE):
+        return "I'm just a computer program, but I'm here to help you!"
+    elif re.search(r"\b(services|what do you offer)\b", query, re.IGNORECASE):
+        return "We offer web development, mobile app development, and cloud solutions."
+    elif re.search(r"\b(pricing|cost)\b", query, re.IGNORECASE):
+        return "Our pricing varies depending on the project's scope. Please contact us for a customized quote."
+    elif re.search(r"\b(contact|phone|email)\b", query, re.IGNORECASE):
+        return "You can reach us at +1-123-456-7890 or email us at info@example.com."
+    elif re.search(r"\b(location|address)\b", query, re.IGNORECASE):
+        return "Our office is located at 123 Main Street, City, Country."
+    elif re.search(r"\b(support|help)\b", query, re.IGNORECASE):
+        return "Our customer support team is available 24/7 to assist you."
+    elif re.search(r"\b(website|URL)\b", query, re.IGNORECASE):
+        return "You can visit our website at www.example.com for more information."
+    else:
+        return "I'm sorry, I didn't understand that. How else can I assist you?"
+
+def main():
+    print("Welcome to our chat application!")
+    print("You can exit the chat by typing 'exit'.")
+    name = input("Enter your name: ")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() == "exit":
+            print(f"Thank you {name} for using our chat application!")
+            break
+        response = respond_to_query(user_input,name)
+        print("Bot:", response)
+
+if __name__ == "__main__":
+    main()
+
+
+

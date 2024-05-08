@@ -1,0 +1,24 @@
+public class calci {
+    public static void addition(integer a,integer b)
+    {
+        integer c=a+b;
+        system.debug('Addition  of two number is '+c);
+    }
+    public static void Sub(integer a,integer b)
+    {
+        integer c=a-b;
+        system.debug('Subtraction  of two number is '+c);
+    }
+    public static void Mul(integer a,integer b)
+    {
+        integer c=a*b;
+        system.debug('multiplcation  of two number is '+c);
+    }
+    public static void Div(integer a,integer b)
+    {
+        integer c=a/b;
+        system.debug('division is  of two number is '+c);
+    }
+   
+
+}

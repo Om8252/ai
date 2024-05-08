@@ -1,0 +1,47 @@
+class nQueen:
+    def __init__(self,n):
+        self.n = n
+        self.solutions = []
+        
+    def is_safe(self,board, row, col):
+        for i in range(row):
+            if(board[i]==col or board[i]-i== col-row or board[i]+i == col+row):
+                return False
+        return True
+        
+    def solve(self,board,row):
+        if(self.n == row):
+            self.solutions.append(board[:])
+            return True
+            
+        solution_found = False
+        for col in range(self.n):
+            if self.is_safe(board,row,col):
+                board[row] = col
+                if self.solve(board,row+1):
+                    solution_found = True
+                board[row] = -1
+        return solution_found
+        
+def print_sol(solution,n):
+    for row in range(n):
+        for col in range(n):
+            if col == solution[row]:
+                print("1",end=" ")
+            else:
+                print("0",end=" ")
+        print()
+            
+n = 8
+solver = nQueen(n)
+board = [-1]*n
+solver.solve(board,0)
+
+for idx, solution in enumerate(solver.solutions):
+    print(f"solution no {idx+1}")
+    print_sol(solution,n)
+    print()
+            
+            
+        
+

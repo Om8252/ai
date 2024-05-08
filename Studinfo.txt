@@ -1,0 +1,20 @@
+public class studinfo {
+    public static void Info()
+    {
+        system.debug('***************');
+        system.debug('Student Information');
+        system.debug('***************');
+        
+        string n='Om';
+        string c='met bkc';
+        string b='computer engineering';
+        string d='A';
+        integer r=12;
+        system.debug('Name: '+n);
+        system.debug('College name: '+c);
+        system.debug('Branch: '+b);
+        system.debug('Division: '+d);
+        system.debug('Roll No: '+r);
+    }
+
+}

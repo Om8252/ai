@@ -1,0 +1,69 @@
+import heapq
+
+# Define the size of the grid
+ROW = 9
+COL = 10
+
+# Implement the A* search algorithm
+def a_star_search(grid, src, dest):
+    # Initialize the open list (cells to be visited) with the start cell
+    open_list = [(0, src, [])]
+    # Initialize the closed list (visited cells)
+    closed_list = set()
+
+    while open_list:
+        # Pop the cell with the smallest f value from the open list
+        f, (i, j), path = heapq.heappop(open_list)
+        closed_list.add((i, j))
+
+        # If the current cell is the destination, return the path
+        if (i, j) == dest:
+            return f, path + [(i, j)]
+
+        # Explore neighboring cells (including diagonal cells)
+        for di in range(-1, 2):
+            for dj in range(-1, 2):
+                if di == 0 and dj == 0:
+                    continue  # Skip the current cell (itself)
+
+                new_i, new_j = i + di, j + dj
+
+                # Check if the new cell is within the grid and unblocked
+                if 0 <= new_i < ROW and 0 <= new_j < COL and grid[new_i][new_j] == 1 and (new_i, new_j) not in closed_list:
+                    # Calculate the new f value
+                    g_new = f + 1 if di == 0 or dj == 0 else f + 1.414  # Diagonal movement cost: sqrt(2)
+                    h_new = abs(new_i - dest[0]) + abs(new_j - dest[1])  # Manhattan distance as heuristic
+                    f_new = g_new + h_new
+
+                    # Add the new cell to the open list
+                    heapq.heappush(open_list, (f_new, (new_i, new_j), path + [(i, j)]))
+
+    # If the destination is not reachable
+    return float('inf'), []
+
+# Define the grid (1 for unblocked, 0 for blocked)
+grid = [
+    [1, 0, 1, 1, 1, 1, 0, 1, 1, 1],
+    [1, 1, 1, 0, 1, 1, 1, 0, 1, 1],
+    [1, 1, 1, 0, 1, 1, 0, 1, 0, 1],
+    [0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+    [1, 1, 1, 0, 1, 1, 1, 0, 1, 0],
+    [1, 0, 1, 1, 1, 1, 0, 1, 0, 0],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 1, 1, 1, 1, 0, 1, 1, 1],
+    [1, 1, 1, 0, 0, 0, 1, 0, 0, 1]
+]
+
+# Define the source and destination
+src = (8, 0)
+dest = (0, 0)
+
+# Run the A* search algorithm
+path_cost, path = a_star_search(grid, src, dest)
+
+if path_cost != float('inf'):
+    print("The shortest path cost from source to destination is:", path_cost)
+    print("The shortest path is:", path)
+else:
+    print("There is no path from source to destination.")
+
